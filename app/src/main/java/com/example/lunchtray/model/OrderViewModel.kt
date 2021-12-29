@@ -65,72 +65,113 @@ class OrderViewModel : ViewModel() {
         NumberFormat.getCurrencyInstance().format(it)
     }
 
+    /*init {
+        // Set initial values for the order
+        resetOrder()
+    }*/
+
     /**
      * Set the entree for the order.
      */
     fun setEntree(entree: String) {
-        // TODO: if _entree.value is not null, set the previous entree price to the current
-        //  entree price.
+        // if _entree.value is not null, set the previous entree price to the current entree price.
+        if (_entree.value != null) {
+            previousEntreePrice = _entree.value!!.price
+        }
 
-        // TODO: if _subtotal.value is not null subtract the previous entree price from the current
-        //  subtotal value. This ensures that we only charge for the currently selected entree.
+        // if _subtotal.value is not null subtract the previous entree price from the current
+        // subtotal value. This ensures that we only charge for the currently selected entree.
+        if (_subtotal.value != null) {
+            _subtotal.value = _subtotal.value!! - previousEntreePrice
+        }
 
-        // TODO: set the current entree value to the menu item corresponding to the passed in string
-        // TODO: update the subtotal to reflect the price of the selected entree.
+        // set the current entree value to the menu item corresponding to the passed in string
+        _entree.value = menuItems[entree]
+        // update the subtotal to reflect the price of the selected entree.
+        updateSubtotal(_entree.value!!.price)
     }
 
     /**
      * Set the side for the order.
      */
     fun setSide(side: String) {
-        // TODO: if _side.value is not null, set the previous side price to the current side price.
-
-        // TODO: if _subtotal.value is not null subtract the previous side price from the current
+        // if _side.value is not null, set the previous side price to the current side price.
+        if (_side.value != null) {
+            previousSidePrice = _side.value!!.price
+        }
+        // if _subtotal.value is not null subtract the previous side price from the current
         //  subtotal value. This ensures that we only charge for the currently selected side.
+        if (_subtotal.value != null) {
+            _subtotal.value = _subtotal.value!! - previousSidePrice
+        }
 
-        // TODO: set the current side value to the menu item corresponding to the passed in string
-        // TODO: update the subtotal to reflect the price of the selected side.
+        // set the current side value to the menu item corresponding to the passed in string
+        _side.value = menuItems[side]
+        // update the subtotal to reflect the price of the selected side.
+        updateSubtotal(_side.value!!.price)
     }
 
     /**
      * Set the accompaniment for the order.
      */
     fun setAccompaniment(accompaniment: String) {
-        // TODO: if _accompaniment.value is not null, set the previous accompaniment price to the
+        // if _accompaniment.value is not null, set the previous accompaniment price to the
         //  current accompaniment price.
-
-        // TODO: if _accompaniment.value is not null subtract the previous accompaniment price from
+        if (_accompaniment.value != null) {
+            previousAccompanimentPrice = _accompaniment.value!!.price
+        }
+        // if _accompaniment.value is not null subtract the previous accompaniment price from
         //  the current subtotal value. This ensures that we only charge for the currently selected
         //  accompaniment.
-
-        // TODO: set the current accompaniment value to the menu item corresponding to the passed in
+        if (_subtotal.value != null) {
+            _subtotal.value = _subtotal.value!! - previousAccompanimentPrice
+        }
+        // set the current accompaniment value to the menu item corresponding to the passed in
         //  string
-        // TODO: update the subtotal to reflect the price of the selected accompaniment.
+        _accompaniment.value = menuItems[accompaniment]
+        // update the subtotal to reflect the price of the selected accompaniment.
+        updateSubtotal(_accompaniment.value!!.price)
     }
 
     /**
      * Update subtotal value.
      */
     private fun updateSubtotal(itemPrice: Double) {
-        // TODO: if _subtotal.value is not null, update it to reflect the price of the recently
+        // if _subtotal.value is not null, update it to reflect the price of the recently
         //  added item.
-        //  Otherwise, set _subtotal.value to equal the price of the item.
+        if (_subtotal.value != null) {
+            _subtotal.value = _subtotal.value!! + itemPrice
+        } else {
+            //  Otherwise, set _subtotal.value to equal the price of the item.
+            _subtotal.value = itemPrice
+        }
 
-        // TODO: calculate the tax and resulting total
+        // calculate the tax and resulting total
+        calculateTaxAndTotal()
     }
 
     /**
      * Calculate tax and update total.
      */
     fun calculateTaxAndTotal() {
-        // TODO: set _tax.value based on the subtotal and the tax rate.
-        // TODO: set the total based on the subtotal and _tax.value.
+        // set _tax.value based on the subtotal and the tax rate.
+        _tax.value = taxRate.times(_subtotal.value!!)
+        // set the total based on the subtotal and _tax.value.
+        _total.value = _subtotal.value?.plus(_tax.value!!)
     }
 
     /**
      * Reset all values pertaining to the order.
      */
     fun resetOrder() {
-        // TODO: Reset all values associated with an order
+        previousEntreePrice = 0.0
+        previousSidePrice = 0.0
+        previousAccompanimentPrice = 0.0
+        _entree.value = null //menuItems["cauliflower"]
+        _side.value = null //menuItems["salad"]
+        _accompaniment.value = null //menuItems["bread"]
+        _subtotal.value = 0.0 //menuItems["cauliflower"]?.price
+        _total.value = 0.0 //_subtotal.value?.plus(_tax.value!!)
+        _tax.value = 0.0 //taxRate.times(_subtotal.value!!)
     }
 }

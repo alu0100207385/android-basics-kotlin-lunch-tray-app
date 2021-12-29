@@ -19,8 +19,12 @@ import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import java.text.DecimalFormat
+import java.text.NumberFormat
 
 open class BaseTest {
+
+    val pricePrefix : String = (NumberFormat.getCurrencyInstance() as DecimalFormat).positivePrefix
 
     fun fullOrderFlow() {
         // Launch the main activity
@@ -40,4 +44,5 @@ open class BaseTest {
         // Move to next fragment
         onView(withId(R.id.next_button)).perform(click())
     }
+
 }
